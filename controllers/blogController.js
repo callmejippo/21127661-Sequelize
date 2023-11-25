@@ -177,72 +177,7 @@ controller.showDetails = async (req, res) => {
   res.render("details");
 };
 
-controller.showCategory = async (req, res) => {
-  let category = req.params.id;
-  res.locals.categories = await models.Category.findAll({
-    attributes: ["id", "name"],
-    include: [{ model: models.Blog }],
-  });
-  res.locals.tags = await models.Tag.findAll({
-    attributes: ["id", "name"],
-  });
 
-  res.locals.blogs = await models.Blog.findAll({
-    attributes: [
-      "id",
-      "title",
-      "imagePath",
-      "summary",
-      "createdAt",
-      "categoryId",
-    ],
-    include: [{ model: models.Comment }],
-    where: { categoryId: category },
-  });
-  res.render("index");
-};
 
-controller.showTag = async (req, res) => {
-  let tag = req.params.id;
-  res.locals.categories = await models.Category.findAll({
-    attributes: ["id", "name"],
-    include: [{ model: models.Blog }],
-  });
-  res.locals.tags = await models.Tag.findAll({
-    attributes: ["id", "name"],
-  });
-
-  res.locals.blogs = await models.Blog.findAll({
-    attributes: ["id", "title", "imagePath", "summary", "createdAt"],
-    include: [
-      { model: models.Comment },
-      { model: models.Tag, where: { id: tag } },
-    ],
-  });
-  res.render("index");
-};
-
-controller.showSearchResult = async (req, res) => {
-  let keyword = req.query.keyword;
-  console.log(keyword);
-
-  res.locals.categories = await models.Category.findAll({
-    attributes: ["id", "name"],
-    include: [{ model: models.Blog }],
-  });
-  res.locals.tags = await models.Tag.findAll({
-    attributes: ["id", "name"],
-  });
-
-  res.locals.blogs = await models.Blog.findAll({
-    attributes: ["id", "title", "imagePath", "summary", "createdAt"],
-    include: [{ model: models.Comment }],
-    where: {
-      title: { [models.Sequelize.Op.like]: `%${keyword}%` },
-    },
-  });
-
-  res.render("index");
-};
 
 module.exports = controller;
